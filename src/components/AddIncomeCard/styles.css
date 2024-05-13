@@ -1,0 +1,45 @@
+.income-card-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 355px;
+  height: 181px;
+  border-radius: 10px;
+  background-color: #9b9b9b;
+  box-shadow: 0px 4px 4px 0px #00000040;
+}
+
+.wallet-balance {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 34.47px;
+  text-align: left;
+  color: #9dff5b;
+}
+.wallet-balance-heading-text {
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 34.47px;
+  text-align: left;
+  color: #ffffff;
+}
+.add-income-btn {
+  width: 167.65px;
+  height: 38px;
+  opacity: 0px;
+  border: none;
+  outline: none;
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(90deg, #b5dc52 0%, #89e148 100%);
+
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 18.38px;
+  text-align: left;
+  color: #ffffff;
+  margin-top: 32px;
+}
