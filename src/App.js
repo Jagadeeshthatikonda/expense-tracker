@@ -1,25 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+// App.js
+import React, { useState } from "react";
+import "./App.css";
 
-function App() {
+const App = () => {
+  const [walletBalance, setWalletBalance] = useState(5000);
+  const [expenses, setExpenses] = useState([]);
+
+  const addExpense = expense => {
+    setExpenses([...expenses, expense]);
+    setWalletBalance(walletBalance - expense.amount);
+  };
+
+  const addIncome = income => {
+    setWalletBalance(walletBalance + income.amount);
+  };
+
+  const deleteExpense = id => {
+    const updatedExpenses = expenses.filter(expense => expense.id !== id);
+    setExpenses(updatedExpenses);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app-container">
+      <h1 className="header-text">Expense Tracker</h1>
+      <div className="income-expenses-details-container">sample</div>
+      <div className="transactions-and-top-expenses-details">ample</div>
     </div>
   );
-}
+};
 
 export default App;
