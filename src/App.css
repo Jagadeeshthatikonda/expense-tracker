@@ -7,6 +7,10 @@
 }
 
 .income-expenses-details-container {
+  background-color: #626262;
+  border-radius: 10px;
+  width: 100%;
+  margin-top: 8px;
 }
 
 .transactions-and-top-expenses-details {
