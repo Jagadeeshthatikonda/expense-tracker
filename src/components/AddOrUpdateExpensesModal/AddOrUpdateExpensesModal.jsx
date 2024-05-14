@@ -1,23 +1,43 @@
+import { v4 as uuidV4 } from "uuid";
 import React, { useState } from "react";
 import Modal from "react-modal";
+
 import "./styles.css";
-const ExpenseModal = ({ isOpen, closeModal, addExpense }) => {
-  const [expenseAmount, setExpenseAmount] = useState();
-  const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("");
-  const [date, setDate] = useState("");
+
+const AddOrUpdateExpensesModal = ({
+  mode,
+  expense,
+  isOpen,
+  closeModal,
+  updateExpenseId,
+  addOrUpdateExpense,
+}) => {
+  const [expenseAmount, setExpenseAmount] = useState(
+    expense ? expense.price : 0
+  );
+  const [title, setTitle] = useState(expense ? expense.title : "");
+  const [category, setCategory] = useState(expense ? expense.category : "");
+  const [date, setDate] = useState(expense ? expense.date : "");
+  const isUpdateMode = mode === "UPDATE";
+  const buttonText = isUpdateMode ? "Update" : "Add";
+
+  const isAddOrUpdateActionEnabled =
+    !!title && !!category && !!date && !!expenseAmount;
 
   const handleInputChange = event => {
     setExpenseAmount(parseInt(event.target.value));
   };
 
-  const handleAddExpense = () => {
-    addExpense({
+  const handleExpense = () => {
+    const newExpense = {
+      id: expense ? expense.id : uuidV4(),
       title,
       price: expenseAmount,
       category,
       date,
-    });
+    };
+
+    addOrUpdateExpense(newExpense);
     closeModal();
   };
 
@@ -25,7 +45,7 @@ const ExpenseModal = ({ isOpen, closeModal, addExpense }) => {
     <Modal
       isOpen={isOpen}
       onRequestClose={closeModal}
-      contentLabel="Add Expense"
+      contentLabel="Expense"
       style={{
         overlay: {
           opacity: "0px",
@@ -50,7 +70,7 @@ const ExpenseModal = ({ isOpen, closeModal, addExpense }) => {
         },
       }}
     >
-      <h2 className="add-balance-heading">Add Expense</h2>
+      <h2 className="add-balance-heading">{`${buttonText} Expense`}</h2>
       <div className="actions-container">
         <input
           type="text"
@@ -58,6 +78,7 @@ const ExpenseModal = ({ isOpen, closeModal, addExpense }) => {
           value={title}
           onChange={event => setTitle(event.target.value)}
           className="add-expense-input"
+          required
         />
 
         <input
@@ -66,6 +87,7 @@ const ExpenseModal = ({ isOpen, closeModal, addExpense }) => {
           value={expenseAmount}
           onChange={handleInputChange}
           className="add-expense-input"
+          required
         />
         <input
           type="text"
@@ -73,6 +95,7 @@ const ExpenseModal = ({ isOpen, closeModal, addExpense }) => {
           value={category}
           onChange={event => setCategory(event.target.value)}
           className="add-expense-input"
+          required
         />
         <input
           type="date"
@@ -80,9 +103,14 @@ const ExpenseModal = ({ isOpen, closeModal, addExpense }) => {
           value={date}
           onChange={event => setDate(event.target.value)}
           className="add-expense-input"
+          required
         />
-        <button onClick={handleAddExpense} className="add-expense-button">
-          Add Expense
+        <button
+          onClick={handleExpense}
+          className="add-expense-button"
+          disabled={!isAddOrUpdateActionEnabled}
+        >
+          {buttonText} Expense
         </button>
         <button onClick={closeModal} className="cancel-button">
           Cancel
@@ -92,4 +120,4 @@ const ExpenseModal = ({ isOpen, closeModal, addExpense }) => {
   );
 };
 
-export default ExpenseModal;
+export default AddOrUpdateExpensesModal;
