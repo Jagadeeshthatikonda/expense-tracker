@@ -26,7 +26,8 @@ const UpdateExpenseModal = ({
     setUpdatedExpenseAmount(expenseValue);
   };
 
-  const handleExpense = () => {
+  const handleExpense = e => {
+    e.preventDefault();
     if (!updatedExpenseAmount) {
       enqueueSnackbar(
         "Expense should not be empty, if it is expected then delete the expense",

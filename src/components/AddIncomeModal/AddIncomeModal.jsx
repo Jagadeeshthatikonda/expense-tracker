@@ -13,7 +13,8 @@ const AddIncomeModal = ({ isOpen, closeModal, walletBalance, addIncome }) => {
     setIncomeAmount(incomeValue);
   };
 
-  const handleAddBalance = () => {
+  const handleAddBalance = e => {
+    e.preventDefault();
     if (!incomeAmount) {
       enqueueSnackbar(
         "Income should not be empty, if it is expected then no need to add",
