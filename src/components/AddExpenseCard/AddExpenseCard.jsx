@@ -1,5 +1,4 @@
-// expense.js
-import React, { useState } from "react";
+import React from "react";
 import "./styles.css";
 import { HiMiniPlusSmall } from "react-icons/hi2";
 const AddExpenseCard = ({ openAddExpenseModal, expenses }) => (

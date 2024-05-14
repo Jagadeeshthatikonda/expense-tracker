@@ -4,24 +4,13 @@ import Modal from "react-modal";
 
 import "./styles.css";
 
-const AddOrUpdateExpensesModal = ({
-  mode,
-  expense,
-  isOpen,
-  closeModal,
-  updateExpenseId,
-  addOrUpdateExpense,
-}) => {
-  const [expenseAmount, setExpenseAmount] = useState(
-    expense ? expense.price : 0
-  );
-  const [title, setTitle] = useState(expense ? expense.title : "");
-  const [category, setCategory] = useState(expense ? expense.category : "");
-  const [date, setDate] = useState(expense ? expense.date : "");
-  const isUpdateMode = mode === "UPDATE";
-  const buttonText = isUpdateMode ? "Update" : "Add";
+const AddExpenseModal = ({ isOpen, closeModal, addExpense }) => {
+  const [expenseAmount, setExpenseAmount] = useState(0);
+  const [title, setTitle] = useState("");
+  const [category, setCategory] = useState("");
+  const [date, setDate] = useState("");
 
-  const isAddOrUpdateActionEnabled =
+  const isAddExpenseActionEnabled =
     !!title && !!category && !!date && !!expenseAmount;
 
   const handleInputChange = event => {
@@ -30,14 +19,14 @@ const AddOrUpdateExpensesModal = ({
 
   const handleExpense = () => {
     const newExpense = {
-      id: expense ? expense.id : uuidV4(),
+      id: uuidV4(),
       title,
       price: expenseAmount,
       category,
       date,
     };
 
-    addOrUpdateExpense(newExpense);
+    addExpense(newExpense);
     closeModal();
   };
 
@@ -61,7 +50,6 @@ const AddOrUpdateExpensesModal = ({
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          borderRadius: "15px",
           top: "auto",
           bottom: "auto",
           left: "auto",
@@ -70,7 +58,7 @@ const AddOrUpdateExpensesModal = ({
         },
       }}
     >
-      <h2 className="add-balance-heading">{`${buttonText} Expense`}</h2>
+      <h2 className="add-balance-heading">{`Add Expense`}</h2>
       <div className="actions-container">
         <input
           type="text"
@@ -78,6 +66,7 @@ const AddOrUpdateExpensesModal = ({
           value={title}
           onChange={event => setTitle(event.target.value)}
           className="add-expense-input"
+          maxLength={10}
           required
         />
 
@@ -87,6 +76,8 @@ const AddOrUpdateExpensesModal = ({
           value={expenseAmount}
           onChange={handleInputChange}
           className="add-expense-input"
+          maxLength={10}
+          min="0"
           required
         />
         <input
@@ -95,6 +86,7 @@ const AddOrUpdateExpensesModal = ({
           value={category}
           onChange={event => setCategory(event.target.value)}
           className="add-expense-input"
+          maxLength={15}
           required
         />
         <input
@@ -108,9 +100,9 @@ const AddOrUpdateExpensesModal = ({
         <button
           onClick={handleExpense}
           className="add-expense-button"
-          disabled={!isAddOrUpdateActionEnabled}
+          disabled={!isAddExpenseActionEnabled}
         >
-          {buttonText} Expense
+          Add Expense
         </button>
         <button onClick={closeModal} className="cancel-button">
           Cancel
@@ -120,4 +112,4 @@ const AddOrUpdateExpensesModal = ({
   );
 };
 
-export default AddOrUpdateExpensesModal;
+export default AddExpenseModal;

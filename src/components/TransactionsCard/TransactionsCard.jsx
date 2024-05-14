@@ -1,7 +1,6 @@
 // IncomeForm.js
 import React, { useState } from "react";
 import "./styles.css";
-import { HiMiniPlusSmall } from "react-icons/hi2";
 import { GiExpense } from "react-icons/gi";
 import { getFormattedDate } from "../../utils/dateUtils.js";
 import { IoIosCloseCircleOutline } from "react-icons/io";

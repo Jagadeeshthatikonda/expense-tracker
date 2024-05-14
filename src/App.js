@@ -4,24 +4,44 @@ import "./App.css";
 import AddIncomeCard from "./components/AddIncomeCard/AddIncomeCard";
 import AddExpenseCard from "./components/AddExpenseCard/AddExpenseCard";
 import AddIncomeModal from "./components/AddIncomeModal/AddIncomeModal";
-import AddOrUpdateExpensesModal from "./components/AddOrUpdateExpensesModal/AddOrUpdateExpensesModal";
+import AddExpenseModal from "./components/AddExpenseModal/AddExpenseModal";
+import UpdateExpenseModal from "./components/UpdateExpenseModal/UpdateExpenseModal";
 import TransactionsCard from "./components/TransactionsCard/TransactionsCard";
+import ExpensesPieChart from "./components/Piechart/Piechart";
+import { useSnackbar } from "notistack";
 
 const App = () => {
-  const [walletBalance, setWalletBalance] = useState(5000);
+  const [walletBalance, setWalletBalance] = useState(10);
   const [expenses, setExpenses] = useState([]);
   const [isOpenIncomeModal, setIsOpenIncomeModal] = useState(false);
   const [isOpenExpenseModal, setIsOpenExpenseModal] = useState(false);
   const [mode, setMode] = useState("");
   const [updateExpenseId, setUpdateExpenseId] = useState("");
-  const isUpdateMode = mode === "UPDATE";
+  const { enqueueSnackbar } = useSnackbar();
 
   const addExpense = expense => {
+    const updatedWalletBalance = walletBalance - expense.price;
+    if (updatedWalletBalance < 0) {
+      enqueueSnackbar("Wallet balance is insufficient", { variant: "error" });
+
+      return;
+    }
+
     setExpenses(prev => [...prev, expense]);
-    setWalletBalance(walletBalance - expense);
+
+    setWalletBalance(updatedWalletBalance);
   };
 
-  const updateExpense = updatedExpense => {
+  const updateExpense = (updatedExpense, expenseAmount) => {
+    const updatedWalletBalance = walletBalance + expenseAmount;
+    if (updatedWalletBalance < 0) {
+      enqueueSnackbar("Wallet balance is insufficient", { variant: "error" });
+
+      return;
+    }
+
+    setWalletBalance(updatedWalletBalance);
+
     setExpenses(prev => {
       const existingExpenses = [...prev];
 
@@ -49,7 +69,14 @@ const App = () => {
   };
 
   const deleteExpense = id => {
-    const updatedExpenses = expenses.filter(expense => expense.id !== id);
+    const updatedExpenses = expenses.filter(expense => {
+      if (expense.id !== id) {
+        return true;
+      } else {
+        setWalletBalance(prev => prev + expense.price);
+        return false;
+      }
+    });
     setExpenses(updatedExpenses);
   };
 
@@ -81,6 +108,8 @@ const App = () => {
   const totalExpenses = () =>
     expenses.reduce((accumulator, current) => accumulator + current.price, 0);
 
+  const isOpenAddExpenseModal = mode === "ADD" && isOpenExpenseModal;
+  const isOpenUpdateExpenseModal = mode === "UPDATE" && isOpenExpenseModal;
   return (
     <div className="app-container">
       <h1 className="header-text">Expense Tracker</h1>
@@ -93,6 +122,7 @@ const App = () => {
           openAddExpenseModal={openAddExpenseModal}
           expenses={totalExpenses()}
         />
+        <ExpensesPieChart expenses={expenses} />
       </div>
       <div className="transactions-and-top-expenses-details">
         <TransactionsCard
@@ -106,14 +136,23 @@ const App = () => {
         closeModal={() => setIsOpenIncomeModal(false)}
         addIncome={addIncome}
       />
-      <AddOrUpdateExpensesModal
-        mode={mode}
-        expense={getActiveUpdateExpense()}
-        isOpen={isOpenExpenseModal}
-        updateExpenseId={updateExpenseId}
-        closeModal={isUpdateMode ? closeUpdateExpenseModal : closeExpenseModal}
-        addOrUpdateExpense={isUpdateMode ? updateExpense : addExpense}
-      />
+      {isOpenAddExpenseModal ? (
+        <AddExpenseModal
+          isOpen={isOpenExpenseModal}
+          closeModal={closeExpenseModal}
+          addExpense={addExpense}
+        />
+      ) : null}
+
+      {isOpenUpdateExpenseModal ? (
+        <UpdateExpenseModal
+          walletBalance={walletBalance}
+          existingExpense={getActiveUpdateExpense()}
+          isOpen={isOpenExpenseModal}
+          closeModal={closeUpdateExpenseModal}
+          updateExpense={updateExpense}
+        />
+      ) : null}
     </div>
   );
 };

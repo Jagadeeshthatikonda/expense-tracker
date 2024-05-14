@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
 import "./styles.css";
-const IncomeModal = ({ isOpen, closeModal, addIncome }) => {
+const AddIncomeModal = ({ isOpen, closeModal, addIncome }) => {
   const [incomeAmount, setIncomeAmount] = useState();
 
   const handleInputChange = event => {
@@ -9,7 +9,6 @@ const IncomeModal = ({ isOpen, closeModal, addIncome }) => {
   };
 
   const handleAddBalance = () => {
-    console.log(incomeAmount);
     addIncome(parseInt(incomeAmount));
     closeModal();
   };
@@ -61,4 +60,4 @@ const IncomeModal = ({ isOpen, closeModal, addIncome }) => {
   );
 };
 
-export default IncomeModal;
+export default AddIncomeModal;
