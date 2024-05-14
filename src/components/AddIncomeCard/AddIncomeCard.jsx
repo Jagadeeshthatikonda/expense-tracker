@@ -3,7 +3,7 @@ import { HiMiniPlusSmall } from "react-icons/hi2";
 
 import "./styles.css";
 
-const AddIncomeCard = ({ openAddIncomeModal, walletBalance }) => (
+const AddIncomeCard = ({ openAddIncomeForm, walletBalance }) => (
   <div className="income-card-container">
     <h2 className="expenses-balance-heading-text">
       Wallet Balance:
@@ -11,7 +11,7 @@ const AddIncomeCard = ({ openAddIncomeModal, walletBalance }) => (
         {` ₹${walletBalance}`}
       </span>
     </h2>
-    <button className="add-income-btn" onClick={openAddIncomeModal}>
+    <button className="add-income-btn" onClick={openAddIncomeForm}>
       <HiMiniPlusSmall size={24} color={"white"} />
       Add Income
     </button>

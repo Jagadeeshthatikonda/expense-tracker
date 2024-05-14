@@ -8,9 +8,9 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import "./styles.css";
-import { PIE_VALUE } from "../../constants";
+import { PIE_VALUE } from "../../constants/index.js";
 import { expenseItemColors } from "../../utils/colorUtils.js";
-import { getExpenseGroupedDataFromArrayOfObjects } from "../../utils/";
+import { getExpenseGroupedDataFromArrayOfObjects } from "../../utils/index.js";
 const RADIAN = Math.PI / PIE_VALUE;
 
 const renderCustomizedLabel = ({
@@ -45,7 +45,7 @@ const renderCustomizedLabel = ({
   );
 };
 
-const ExpensesPieChart = ({ expenses }) => {
+const ExpensesSummary = ({ expenses }) => {
   const data = getExpenseGroupedDataFromArrayOfObjects(expenses);
   return (
     <div className="recharts-wrapper-container">
@@ -78,4 +78,4 @@ const ExpensesPieChart = ({ expenses }) => {
   );
 };
 
-export default ExpensesPieChart;
+export default ExpensesSummary;

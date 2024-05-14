@@ -4,7 +4,7 @@ import { useSnackbar } from "notistack";
 
 import "./styles.css";
 
-const UpdateExpenseModal = ({
+const UpdateExpenseForm = ({
   walletBalance,
   existingExpense,
   isOpen,
@@ -66,6 +66,7 @@ const UpdateExpenseModal = ({
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          animation: "in 0.4s ease-out",
         },
         content: {
           width: "538px",
@@ -132,4 +133,4 @@ const UpdateExpenseModal = ({
   );
 };
 
-export default UpdateExpenseModal;
+export default UpdateExpenseForm;

@@ -4,7 +4,7 @@ import { useSnackbar } from "notistack";
 
 import "./styles.css";
 
-const AddIncomeModal = ({ isOpen, closeModal, walletBalance, addIncome }) => {
+const AddIncomeForm = ({ isOpen, closeModal, walletBalance, addIncome }) => {
   const [incomeAmount, setIncomeAmount] = useState(walletBalance);
   const { enqueueSnackbar } = useSnackbar();
 
@@ -49,6 +49,7 @@ const AddIncomeModal = ({ isOpen, closeModal, walletBalance, addIncome }) => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          animation: "in 0.4s ease-out",
         },
         content: {
           width: "538px",
@@ -89,4 +90,4 @@ const AddIncomeModal = ({ isOpen, closeModal, walletBalance, addIncome }) => {
   );
 };
 
-export default AddIncomeModal;
+export default AddIncomeForm;

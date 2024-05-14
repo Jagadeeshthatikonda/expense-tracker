@@ -10,6 +10,12 @@
   box-shadow: 0px 4px 4px 0px #00000040;
 }
 
+@media screen and (max-width: 660px) {
+  .income-card-container {
+    margin-top: 20px;
+  }
+}
+
 .wallet-balance {
   font-size: 30px;
   font-weight: 700;

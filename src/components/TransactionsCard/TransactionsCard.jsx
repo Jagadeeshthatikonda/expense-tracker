@@ -10,7 +10,7 @@ import { MAXIMUM_TRANSACTIONS_VISIBLE } from "../../constants";
 const TransactionsCard = ({
   expenses,
   deleteExpense,
-  openUpdateExpenseModal,
+  openUpdateExpenseForm,
 }) => {
   const totalPages = Math.ceil(expenses.length / MAXIMUM_TRANSACTIONS_VISIBLE);
   const [currentPage, setCurrentPage] = useState(1);
@@ -56,7 +56,7 @@ const TransactionsCard = ({
         </div>
         <div
           className="edit-transaction-container"
-          onClick={() => openUpdateExpenseModal(expense.id)}
+          onClick={() => openUpdateExpenseForm(expense.id)}
         >
           <BsPencil size={16} color={"white"} />
         </div>

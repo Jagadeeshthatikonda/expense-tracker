@@ -5,7 +5,7 @@ import { useSnackbar } from "notistack";
 
 import "./styles.css";
 
-const AddExpenseModal = ({ isOpen, closeModal, addExpense }) => {
+const AddExpenseForm = ({ isOpen, closeModal, addExpense }) => {
   const [expenseAmount, setExpenseAmount] = useState(1);
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
@@ -51,6 +51,7 @@ const AddExpenseModal = ({ isOpen, closeModal, addExpense }) => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          animation: "in 0.4s ease-out",
         },
         content: {
           width: "538px",
@@ -69,7 +70,7 @@ const AddExpenseModal = ({ isOpen, closeModal, addExpense }) => {
       }}
     >
       <form onSubmit={handleExpense}>
-        <h2 className="add-balance-heading">{`Add Expense`}</h2>
+        <h2 className="add-expense-heading">{`Add Expense`}</h2>
         <div className="actions-container">
           <input
             type="text"
@@ -117,4 +118,4 @@ const AddExpenseModal = ({ isOpen, closeModal, addExpense }) => {
   );
 };
 
-export default AddExpenseModal;
+export default AddExpenseForm;

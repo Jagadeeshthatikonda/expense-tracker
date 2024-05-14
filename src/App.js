@@ -3,11 +3,11 @@ import { useSnackbar } from "notistack";
 //Maintain import orders
 import AddIncomeCard from "./components/AddIncomeCard/AddIncomeCard";
 import AddExpenseCard from "./components/AddExpenseCard/AddExpenseCard";
-import AddIncomeModal from "./components/AddIncomeModal/AddIncomeModal";
-import AddExpenseModal from "./components/AddExpenseModal/AddExpenseModal";
-import UpdateExpenseModal from "./components/UpdateExpenseModal/UpdateExpenseModal";
+import AddIncomeForm from "./components/AddIncomeForm/AddIncomeForm";
+import AddExpenseForm from "./components/AddExpenseForm/AddExpenseForm";
+import UpdateExpenseForm from "./components/UpdateExpenseForm/UpdateExpenseForm";
 import TransactionsCard from "./components/TransactionsCard/TransactionsCard";
-import ExpensesPieChart from "./components/Piechart/Piechart";
+import ExpensesSummary from "./components/ExpensesSummary/ExpensesSummary";
 import TopExpensesDetails from "./components/TopExpensesDetails/TopExpensesDetails";
 import { DEFAULT_WALLET_BALANCE } from "./constants/";
 import "./App.css";
@@ -31,8 +31,8 @@ const App = () => {
       : DEFAULT_WALLET_BALANCE
   );
 
-  const isOpenAddExpenseModal = mode === "ADD" && isOpenExpenseModal;
-  const isOpenUpdateExpenseModal = mode === "UPDATE" && isOpenExpenseModal;
+  const isOpenAddExpenseForm = mode === "ADD" && isOpenExpenseModal;
+  const isOpenUpdateExpenseForm = mode === "UPDATE" && isOpenExpenseModal;
 
   const setExpensesInLocalStorage = expensesData =>
     localStorage.setItem("expenses", JSON.stringify(expensesData));
@@ -120,18 +120,18 @@ const App = () => {
     setIsOpenIncomeModal(true);
   };
 
-  const openAddExpenseModal = () => {
+  const openAddExpenseForm = () => {
     setMode("ADD");
     setIsOpenExpenseModal(true);
   };
 
-  const openUpdateExpenseModal = id => {
+  const openUpdateExpenseForm = id => {
     setUpdateExpenseId(id);
     setMode("UPDATE");
     setIsOpenExpenseModal(true);
   };
 
-  const closeUpdateExpenseModal = () => {
+  const closeUpdateExpenseForm = () => {
     setUpdateExpenseId("");
     setMode("");
     setIsOpenExpenseModal(false);
@@ -147,25 +147,25 @@ const App = () => {
   const getActiveUpdateExpense = () =>
     expenses.find(expense => expense.id === updateExpenseId);
 
-  const renderUpdateExpenseModal = () => (
-    <UpdateExpenseModal
+  const renderUpdateExpenseForm = () => (
+    <UpdateExpenseForm
       walletBalance={walletBalance}
       existingExpense={getActiveUpdateExpense()}
       isOpen={isOpenExpenseModal}
-      closeModal={closeUpdateExpenseModal}
+      closeModal={closeUpdateExpenseForm}
       updateExpense={updateExpense}
     />
   );
 
-  const renderAddExpenseModal = () => (
-    <AddExpenseModal
+  const renderAddExpenseForm = () => (
+    <AddExpenseForm
       isOpen={isOpenExpenseModal}
       closeModal={closeExpenseModal}
       addExpense={addExpense}
     />
   );
   const renderAddIncomeModal = () => (
-    <AddIncomeModal
+    <AddIncomeForm
       isOpen={isOpenIncomeModal}
       closeModal={() => setIsOpenIncomeModal(false)}
       addIncome={addIncome}
@@ -178,7 +178,7 @@ const App = () => {
       <TransactionsCard
         expenses={expenses}
         deleteExpense={deleteExpense}
-        openUpdateExpenseModal={openUpdateExpenseModal}
+        openUpdateExpenseForm={openUpdateExpenseForm}
       />
       <TopExpensesDetails expenses={expenses} />
     </div>
@@ -187,14 +187,14 @@ const App = () => {
   const renderAddIncomeAndExpenseDetailsCards = () => (
     <div className="income-expenses-details-container">
       <AddIncomeCard
-        openAddIncomeModal={openAddIncomeModal}
+        openAddIncomeForm={openAddIncomeModal}
         walletBalance={walletBalance}
       />
       <AddExpenseCard
-        openAddExpenseModal={openAddExpenseModal}
+        openAddExpenseForm={openAddExpenseForm}
         expenses={totalExpenses()}
       />
-      <ExpensesPieChart expenses={expenses} />
+      <ExpensesSummary expenses={expenses} />
     </div>
   );
 
@@ -205,8 +205,8 @@ const App = () => {
       {renderTransactionsAndTopExpensesCards()}
       {isOpenIncomeModal ? renderAddIncomeModal() : null}
 
-      {isOpenAddExpenseModal ? renderAddExpenseModal() : null}
-      {isOpenUpdateExpenseModal ? renderUpdateExpenseModal() : null}
+      {isOpenAddExpenseForm ? renderAddExpenseForm() : null}
+      {isOpenUpdateExpenseForm ? renderUpdateExpenseForm() : null}
     </div>
   );
 };
