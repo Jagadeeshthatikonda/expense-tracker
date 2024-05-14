@@ -7,7 +7,7 @@ const AddIncomeCard = ({ openAddIncomeModal, walletBalance }) => (
     <h2 className="expenses-balance-heading-text">
       Wallet Balance:
       <span className="wallet-balance" title={walletBalance}>
-        ₹{walletBalance}
+        {` ₹${walletBalance}`}
       </span>
     </h2>
     <button className="add-income-btn" onClick={openAddIncomeModal}>

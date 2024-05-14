@@ -1,20 +1,29 @@
 import { v4 as uuidV4 } from "uuid";
 import React, { useState } from "react";
 import Modal from "react-modal";
+import { useSnackbar } from "notistack";
 
 import "./styles.css";
 
 const AddExpenseModal = ({ isOpen, closeModal, addExpense }) => {
-  const [expenseAmount, setExpenseAmount] = useState(0);
+  const [expenseAmount, setExpenseAmount] = useState(1);
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [date, setDate] = useState("");
+  const { enqueueSnackbar } = useSnackbar();
 
   const isAddExpenseActionEnabled =
     !!title && !!category && !!date && !!expenseAmount;
 
   const handleInputChange = event => {
-    setExpenseAmount(parseInt(event.target.value));
+    const expenseValue = parseInt(event.target.value);
+    if (!expenseValue) {
+      enqueueSnackbar(
+        "Expense should not be empty, if it is expected then delete the expense or do not add the expense",
+        { variant: "error" }
+      );
+    }
+    setExpenseAmount(expenseValue);
   };
 
   const handleExpense = () => {
@@ -66,7 +75,6 @@ const AddExpenseModal = ({ isOpen, closeModal, addExpense }) => {
           value={title}
           onChange={event => setTitle(event.target.value)}
           className="add-expense-input"
-          maxLength={10}
           required
         />
 
@@ -76,7 +84,6 @@ const AddExpenseModal = ({ isOpen, closeModal, addExpense }) => {
           value={expenseAmount}
           onChange={handleInputChange}
           className="add-expense-input"
-          maxLength={10}
           min="0"
           required
         />
@@ -86,7 +93,6 @@ const AddExpenseModal = ({ isOpen, closeModal, addExpense }) => {
           value={category}
           onChange={event => setCategory(event.target.value)}
           className="add-expense-input"
-          maxLength={15}
           required
         />
         <input
@@ -101,6 +107,11 @@ const AddExpenseModal = ({ isOpen, closeModal, addExpense }) => {
           onClick={handleExpense}
           className="add-expense-button"
           disabled={!isAddExpenseActionEnabled}
+          title={
+            !isAddExpenseActionEnabled
+              ? "Please enter all the details to enable this button"
+              : undefined
+          }
         >
           Add Expense
         </button>

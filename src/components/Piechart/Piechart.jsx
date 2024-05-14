@@ -1,9 +1,10 @@
 import React from "react";
-import { PieChart, Pie, Cell, Legend, ResponsiveContainer } from "recharts";
+import { PieChart, Pie, Cell, Legend, Tooltip,ResponsiveContainer } from "recharts";
 import "./styles.css";
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+import { expenseItemColors } from "../../utils/colorUtils.js";
 
 const RADIAN = Math.PI / 180;
+
 const renderCustomizedLabel = ({
   cx,
   cy,
@@ -66,11 +67,13 @@ const ExpensesPieChart = ({ expenses }) => {
             {modifiedArray.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}
-                fill={COLORS[index % COLORS.length]}
+                fill={expenseItemColors[index % expenseItemColors.length]}
                 stroke={""}
               />
             ))}
           </Pie>
+          <Tooltip />
+
           <Legend layout="horizontal" verticalAlign="bottom" align="center" />
         </PieChart>
       </ResponsiveContainer>

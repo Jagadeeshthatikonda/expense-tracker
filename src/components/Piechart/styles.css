@@ -9,6 +9,7 @@
   overflow-x: auto;
   overflow-y: hidden;
   display: flex;
+  justify-content: center;
 }
 .recharts-legend-wrapper .recharts-default-legend::-webkit-scrollbar {
   display: block;

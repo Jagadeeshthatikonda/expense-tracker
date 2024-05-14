@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
+import { useSnackbar } from "notistack";
 
 import "./styles.css";
 
@@ -10,6 +11,8 @@ const UpdateExpenseModal = ({
   closeModal,
   updateExpense,
 }) => {
+  const { enqueueSnackbar } = useSnackbar();
+
   const [updatedExpenseAmount, setUpdatedExpenseAmount] = useState(
     existingExpense.price
   );
@@ -21,7 +24,14 @@ const UpdateExpenseModal = ({
     !!title && !!category && !!date && parseInt(updatedExpenseAmount);
 
   const handleInputChange = event => {
-    setUpdatedExpenseAmount(parseInt(event.target.value));
+    const expenseValue = parseInt(event.target.value);
+    if (!expenseValue) {
+      enqueueSnackbar(
+        "Expense should not be empty, if it is expected then delete the expense",
+        { variant: "error" }
+      );
+    }
+    setUpdatedExpenseAmount(expenseValue);
   };
 
   const handleExpense = () => {
@@ -80,7 +90,6 @@ const UpdateExpenseModal = ({
           value={title}
           onChange={event => setTitle(event.target.value)}
           className="edit-expense-input"
-          maxLength={10}
           required
         />
 
@@ -90,7 +99,6 @@ const UpdateExpenseModal = ({
           value={updatedExpenseAmount}
           onChange={handleInputChange}
           className="edit-expense-input"
-          maxLength={10}
           min="0"
           required
         />
@@ -100,7 +108,6 @@ const UpdateExpenseModal = ({
           value={category}
           onChange={event => setCategory(event.target.value)}
           className="edit-expense-input"
-          maxLength={15}
           required
         />
         <input
@@ -115,6 +122,11 @@ const UpdateExpenseModal = ({
           onClick={handleExpense}
           className="edit-expense-button"
           disabled={!isUpdateActionEnabled}
+          title={
+            !isUpdateActionEnabled
+              ? "Please enter all the details to enable this button"
+              : undefined
+          }
         >
           Update Expense
         </button>

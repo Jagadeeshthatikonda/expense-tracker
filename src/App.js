@@ -1,5 +1,6 @@
 // App.js
 import React, { useState } from "react";
+import { useSnackbar } from "notistack";
 import "./App.css";
 import AddIncomeCard from "./components/AddIncomeCard/AddIncomeCard";
 import AddExpenseCard from "./components/AddExpenseCard/AddExpenseCard";
@@ -8,7 +9,7 @@ import AddExpenseModal from "./components/AddExpenseModal/AddExpenseModal";
 import UpdateExpenseModal from "./components/UpdateExpenseModal/UpdateExpenseModal";
 import TransactionsCard from "./components/TransactionsCard/TransactionsCard";
 import ExpensesPieChart from "./components/Piechart/Piechart";
-import { useSnackbar } from "notistack";
+import TopExpensesDetails from "./components/TopExpensesDetails/TopExpensesDetails";
 
 const App = () => {
   const [walletBalance, setWalletBalance] = useState(10);
@@ -130,6 +131,7 @@ const App = () => {
           deleteExpense={deleteExpense}
           openUpdateExpenseModal={openUpdateExpenseModal}
         />
+        <TopExpensesDetails expenses={expenses} />
       </div>
       <AddIncomeModal
         isOpen={isOpenIncomeModal}

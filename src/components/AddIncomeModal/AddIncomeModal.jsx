@@ -1,11 +1,22 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
 import "./styles.css";
+import { useSnackbar } from "notistack";
+
 const AddIncomeModal = ({ isOpen, closeModal, addIncome }) => {
-  const [incomeAmount, setIncomeAmount] = useState();
+  const [incomeAmount, setIncomeAmount] = useState(1);
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleInputChange = event => {
-    setIncomeAmount(event.target.value);
+    const incomeValue = parseInt(event.target.value);
+    if (!incomeValue) {
+      enqueueSnackbar(
+        "Income should not be empty, if it is expected then no need to add",
+        { variant: "error" }
+      );
+    }
+
+    setIncomeAmount(incomeValue);
   };
 
   const handleAddBalance = () => {
@@ -48,8 +59,19 @@ const AddIncomeModal = ({ isOpen, closeModal, addIncome }) => {
           value={incomeAmount}
           onChange={handleInputChange}
           className="add-income-input"
+          min="0"
+          required
         />
-        <button onClick={handleAddBalance} className="add-income-button">
+        <button
+          onClick={handleAddBalance}
+          className="add-income-button"
+          disabled={!incomeAmount}
+          title={
+            !incomeAmount
+              ? "Please enter all the details to enable this button"
+              : undefined
+          }
+        >
           Add Balance
         </button>
         <button onClick={closeModal} className="cancel-button">

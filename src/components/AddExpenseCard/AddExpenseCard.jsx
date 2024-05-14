@@ -5,7 +5,9 @@ const AddExpenseCard = ({ openAddExpenseModal, expenses }) => (
   <div className="expense-card-container">
     <h2 className="expenses-balance-heading-text">
       Expenses:
-      <span className="expenses-balance"> ₹{expenses}</span>
+      <span className="expenses-balance" title={expenses}>
+        {` ₹${expenses}`}
+      </span>
     </h2>
     <button className="add-expense-btn" onClick={openAddExpenseModal}>
       <HiMiniPlusSmall size={24} color={"white"} />
