@@ -3,23 +3,35 @@ import Modal from "react-modal";
 import "./styles.css";
 import { useSnackbar } from "notistack";
 
-const AddIncomeModal = ({ isOpen, closeModal, addIncome }) => {
-  const [incomeAmount, setIncomeAmount] = useState(1);
+const AddIncomeModal = ({ isOpen, closeModal, walletBalance, addIncome }) => {
+  const [incomeAmount, setIncomeAmount] = useState(walletBalance);
   const { enqueueSnackbar } = useSnackbar();
 
   const handleInputChange = event => {
     const incomeValue = parseInt(event.target.value);
-    if (!incomeValue) {
-      enqueueSnackbar(
-        "Income should not be empty, if it is expected then no need to add",
-        { variant: "error" }
-      );
-    }
 
     setIncomeAmount(incomeValue);
   };
 
   const handleAddBalance = () => {
+    if (!incomeAmount) {
+      enqueueSnackbar(
+        "Income should not be empty, if it is expected then no need to add",
+        { variant: "error" }
+      );
+      return;
+    }
+
+    if (incomeAmount < walletBalance) {
+      enqueueSnackbar(
+        "Existing income can not be decreased and it causes mismatch data to existing expenses",
+        {
+          variant: "error",
+        }
+      );
+      return;
+    }
+
     addIncome(parseInt(incomeAmount));
     closeModal();
   };
@@ -51,33 +63,26 @@ const AddIncomeModal = ({ isOpen, closeModal, addIncome }) => {
         },
       }}
     >
-      <h2 className="add-balance-heading">Add Balance</h2>
-      <div className="income-actions-container ">
-        <input
-          type="number"
-          placeholder="Income Amount"
-          value={incomeAmount}
-          onChange={handleInputChange}
-          className="add-income-input"
-          min="0"
-          required
-        />
-        <button
-          onClick={handleAddBalance}
-          className="add-income-button"
-          disabled={!incomeAmount}
-          title={
-            !incomeAmount
-              ? "Please enter all the details to enable this button"
-              : undefined
-          }
-        >
-          Add Balance
-        </button>
-        <button onClick={closeModal} className="cancel-button">
-          Cancel
-        </button>
-      </div>
+      <form onSubmit={handleAddBalance}>
+        <h2 className="add-balance-heading">Add Balance</h2>
+        <div className="income-actions-container ">
+          <input
+            type="number"
+            placeholder="Income Amount"
+            value={incomeAmount}
+            onChange={handleInputChange}
+            className="add-income-input"
+            min={`${walletBalance}`}
+            required
+          />
+          <button type="submit" className="add-income-button">
+            Add Balance
+          </button>
+          <button onClick={closeModal} className="cancel-button">
+            Cancel
+          </button>
+        </div>
+      </form>
     </Modal>
   );
 };

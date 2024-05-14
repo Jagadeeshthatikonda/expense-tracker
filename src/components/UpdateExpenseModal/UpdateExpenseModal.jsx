@@ -20,21 +20,21 @@ const UpdateExpenseModal = ({
   const [category, setCategory] = useState(existingExpense.category);
   const [date, setDate] = useState(existingExpense.date);
 
-  const isUpdateActionEnabled =
-    !!title && !!category && !!date && parseInt(updatedExpenseAmount);
-
   const handleInputChange = event => {
     const expenseValue = parseInt(event.target.value);
-    if (!expenseValue) {
-      enqueueSnackbar(
-        "Expense should not be empty, if it is expected then delete the expense",
-        { variant: "error" }
-      );
-    }
+
     setUpdatedExpenseAmount(expenseValue);
   };
 
   const handleExpense = () => {
+    if (!updatedExpenseAmount) {
+      enqueueSnackbar(
+        "Expense should not be empty, if it is expected then delete the expense",
+        { variant: "error" }
+      );
+      return;
+    }
+
     const newExpense = {
       id: existingExpense.id,
       title,
@@ -82,58 +82,51 @@ const UpdateExpenseModal = ({
         },
       }}
     >
-      <h2 className="edit-balance-heading">{`Edit Expense`}</h2>
-      <div className="actions-container">
-        <input
-          type="text"
-          placeholder="Title"
-          value={title}
-          onChange={event => setTitle(event.target.value)}
-          className="edit-expense-input"
-          required
-        />
+      <form onSubmit={handleExpense}>
+        <h2 className="edit-balance-heading">{`Edit Expense`}</h2>
+        <div className="actions-container">
+          <input
+            type="text"
+            placeholder="Title"
+            value={title}
+            onChange={event => setTitle(event.target.value)}
+            className="edit-expense-input"
+            required
+          />
 
-        <input
-          type="number"
-          placeholder="Price"
-          value={updatedExpenseAmount}
-          onChange={handleInputChange}
-          className="edit-expense-input"
-          min="0"
-          required
-        />
-        <input
-          type="text"
-          placeholder="Select Category"
-          value={category}
-          onChange={event => setCategory(event.target.value)}
-          className="edit-expense-input"
-          required
-        />
-        <input
-          type="date"
-          placeholder="dd/mm/yyyy"
-          value={date}
-          onChange={event => setDate(event.target.value)}
-          className="edit-expense-input"
-          required
-        />
-        <button
-          onClick={handleExpense}
-          className="edit-expense-button"
-          disabled={!isUpdateActionEnabled}
-          title={
-            !isUpdateActionEnabled
-              ? "Please enter all the details to enable this button"
-              : undefined
-          }
-        >
-          Update Expense
-        </button>
-        <button onClick={closeModal} className="cancel-button">
-          Cancel
-        </button>
-      </div>
+          <input
+            type="number"
+            placeholder="Price"
+            value={updatedExpenseAmount}
+            onChange={handleInputChange}
+            className="edit-expense-input"
+            min="0"
+            required
+          />
+          <input
+            type="text"
+            placeholder="Select Category"
+            value={category}
+            onChange={event => setCategory(event.target.value)}
+            className="edit-expense-input"
+            required
+          />
+          <input
+            type="date"
+            placeholder="dd/mm/yyyy"
+            value={date}
+            onChange={event => setDate(event.target.value)}
+            className="edit-expense-input"
+            required
+          />
+          <button type="submit" className="edit-expense-button">
+            Update Expense
+          </button>
+          <button onClick={closeModal} className="cancel-button">
+            Cancel
+          </button>
+        </div>
+      </form>
     </Modal>
   );
 };

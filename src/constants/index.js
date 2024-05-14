@@ -1,0 +1,1 @@
+export const DEFAULT_WALLET_BALANCE = 5000;

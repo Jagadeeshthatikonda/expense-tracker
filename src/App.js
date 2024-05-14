@@ -1,7 +1,6 @@
-// App.js
 import React, { useState } from "react";
 import { useSnackbar } from "notistack";
-import "./App.css";
+//Maintain import orders
 import AddIncomeCard from "./components/AddIncomeCard/AddIncomeCard";
 import AddExpenseCard from "./components/AddExpenseCard/AddExpenseCard";
 import AddIncomeModal from "./components/AddIncomeModal/AddIncomeModal";
@@ -10,15 +9,40 @@ import UpdateExpenseModal from "./components/UpdateExpenseModal/UpdateExpenseMod
 import TransactionsCard from "./components/TransactionsCard/TransactionsCard";
 import ExpensesPieChart from "./components/Piechart/Piechart";
 import TopExpensesDetails from "./components/TopExpensesDetails/TopExpensesDetails";
+import { DEFAULT_WALLET_BALANCE } from "./constants/";
+import "./App.css";
 
 const App = () => {
-  const [walletBalance, setWalletBalance] = useState(10);
-  const [expenses, setExpenses] = useState([]);
   const [isOpenIncomeModal, setIsOpenIncomeModal] = useState(false);
   const [isOpenExpenseModal, setIsOpenExpenseModal] = useState(false);
   const [mode, setMode] = useState("");
   const [updateExpenseId, setUpdateExpenseId] = useState("");
   const { enqueueSnackbar } = useSnackbar();
+  const localStorageExpenses = JSON.parse(localStorage.getItem("expenses"));
+  const localStorageWalletBalance = JSON.parse(localStorage.getItem("wallet"));
+
+  const [expenses, setExpenses] = useState(
+    localStorageExpenses ? localStorageExpenses : []
+  );
+  const [walletBalance, setWalletBalance] = useState(
+    localStorageWalletBalance
+      ? localStorageWalletBalance.walletBalance
+      : DEFAULT_WALLET_BALANCE
+  );
+
+  const isOpenAddExpenseModal = mode === "ADD" && isOpenExpenseModal;
+  const isOpenUpdateExpenseModal = mode === "UPDATE" && isOpenExpenseModal;
+
+  const setExpensesInLocalStorage = expensesData =>
+    localStorage.setItem("expenses", JSON.stringify(expensesData));
+
+  const setWalletBalanceInLocalStorage = walletBalance =>
+    localStorage.setItem(
+      "wallet",
+      JSON.stringify({
+        walletBalance,
+      })
+    );
 
   const addExpense = expense => {
     const updatedWalletBalance = walletBalance - expense.price;
@@ -28,12 +52,18 @@ const App = () => {
       return;
     }
 
-    setExpenses(prev => [...prev, expense]);
+    setExpenses(prev => {
+      const expensesData = [...prev, expense];
+      setExpensesInLocalStorage(expensesData);
+      return expensesData;
+    });
 
     setWalletBalance(updatedWalletBalance);
+    setWalletBalanceInLocalStorage(updatedWalletBalance);
   };
 
   const updateExpense = (updatedExpense, expenseAmount) => {
+    console.log(updatedExpense, expenseAmount);
     const updatedWalletBalance = walletBalance + expenseAmount;
     if (updatedWalletBalance < 0) {
       enqueueSnackbar("Wallet balance is insufficient", { variant: "error" });
@@ -42,6 +72,7 @@ const App = () => {
     }
 
     setWalletBalance(updatedWalletBalance);
+    setWalletBalanceInLocalStorage(updatedWalletBalance);
 
     setExpenses(prev => {
       const existingExpenses = [...prev];
@@ -57,16 +88,14 @@ const App = () => {
           updatedExpense
         );
       }
-
+      setExpensesInLocalStorage(existingExpenses);
       return existingExpenses;
     });
   };
 
-  const getActiveUpdateExpense = () =>
-    expenses.find(expense => expense.id === updateExpenseId);
-
   const addIncome = income => {
-    setWalletBalance(walletBalance + income);
+    setWalletBalance(income);
+    setWalletBalanceInLocalStorage(income);
   };
 
   const deleteExpense = id => {
@@ -74,10 +103,15 @@ const App = () => {
       if (expense.id !== id) {
         return true;
       } else {
-        setWalletBalance(prev => prev + expense.price);
+        setWalletBalance(prev => {
+          const walletBalance = prev + expense.price;
+          setWalletBalanceInLocalStorage(walletBalance);
+          return walletBalance;
+        });
         return false;
       }
     });
+    setExpensesInLocalStorage(updatedExpenses);
     setExpenses(updatedExpenses);
   };
 
@@ -109,52 +143,69 @@ const App = () => {
   const totalExpenses = () =>
     expenses.reduce((accumulator, current) => accumulator + current.price, 0);
 
-  const isOpenAddExpenseModal = mode === "ADD" && isOpenExpenseModal;
-  const isOpenUpdateExpenseModal = mode === "UPDATE" && isOpenExpenseModal;
+  const getActiveUpdateExpense = () =>
+    expenses.find(expense => expense.id === updateExpenseId);
+
+  const renderUpdateExpenseModal = () => (
+    <UpdateExpenseModal
+      walletBalance={walletBalance}
+      existingExpense={getActiveUpdateExpense()}
+      isOpen={isOpenExpenseModal}
+      closeModal={closeUpdateExpenseModal}
+      updateExpense={updateExpense}
+    />
+  );
+
+  const renderAddExpenseModal = () => (
+    <AddExpenseModal
+      isOpen={isOpenExpenseModal}
+      closeModal={closeExpenseModal}
+      addExpense={addExpense}
+    />
+  );
+  const renderAddIncomeModal = () => (
+    <AddIncomeModal
+      isOpen={isOpenIncomeModal}
+      closeModal={() => setIsOpenIncomeModal(false)}
+      addIncome={addIncome}
+      walletBalance={walletBalance}
+    />
+  );
+
+  const renderTransactionsAndTopExpensesCards = () => (
+    <div className="transactions-and-top-expenses-details">
+      <TransactionsCard
+        expenses={expenses}
+        deleteExpense={deleteExpense}
+        openUpdateExpenseModal={openUpdateExpenseModal}
+      />
+      <TopExpensesDetails expenses={expenses} />
+    </div>
+  );
+
+  const renderAddIncomeAndExpenseDetailsCards = () => (
+    <div className="income-expenses-details-container">
+      <AddIncomeCard
+        openAddIncomeModal={openAddIncomeModal}
+        walletBalance={walletBalance}
+      />
+      <AddExpenseCard
+        openAddExpenseModal={openAddExpenseModal}
+        expenses={totalExpenses()}
+      />
+      <ExpensesPieChart expenses={expenses} />
+    </div>
+  );
+
   return (
     <div className="app-container">
       <h1 className="header-text">Expense Tracker</h1>
-      <div className="income-expenses-details-container">
-        <AddIncomeCard
-          openAddIncomeModal={openAddIncomeModal}
-          walletBalance={walletBalance}
-        />
-        <AddExpenseCard
-          openAddExpenseModal={openAddExpenseModal}
-          expenses={totalExpenses()}
-        />
-        <ExpensesPieChart expenses={expenses} />
-      </div>
-      <div className="transactions-and-top-expenses-details">
-        <TransactionsCard
-          expenses={expenses}
-          deleteExpense={deleteExpense}
-          openUpdateExpenseModal={openUpdateExpenseModal}
-        />
-        <TopExpensesDetails expenses={expenses} />
-      </div>
-      <AddIncomeModal
-        isOpen={isOpenIncomeModal}
-        closeModal={() => setIsOpenIncomeModal(false)}
-        addIncome={addIncome}
-      />
-      {isOpenAddExpenseModal ? (
-        <AddExpenseModal
-          isOpen={isOpenExpenseModal}
-          closeModal={closeExpenseModal}
-          addExpense={addExpense}
-        />
-      ) : null}
+      {renderAddIncomeAndExpenseDetailsCards()}
+      {renderTransactionsAndTopExpensesCards()}
+      {isOpenIncomeModal ? renderAddIncomeModal() : null}
 
-      {isOpenUpdateExpenseModal ? (
-        <UpdateExpenseModal
-          walletBalance={walletBalance}
-          existingExpense={getActiveUpdateExpense()}
-          isOpen={isOpenExpenseModal}
-          closeModal={closeUpdateExpenseModal}
-          updateExpense={updateExpense}
-        />
-      ) : null}
+      {isOpenAddExpenseModal ? renderAddExpenseModal() : null}
+      {isOpenUpdateExpenseModal ? renderUpdateExpenseModal() : null}
     </div>
   );
 };

@@ -12,21 +12,21 @@ const AddExpenseModal = ({ isOpen, closeModal, addExpense }) => {
   const [date, setDate] = useState("");
   const { enqueueSnackbar } = useSnackbar();
 
-  const isAddExpenseActionEnabled =
-    !!title && !!category && !!date && !!expenseAmount;
-
   const handleInputChange = event => {
     const expenseValue = parseInt(event.target.value);
-    if (!expenseValue) {
-      enqueueSnackbar(
-        "Expense should not be empty, if it is expected then delete the expense or do not add the expense",
-        { variant: "error" }
-      );
-    }
+
     setExpenseAmount(expenseValue);
   };
 
   const handleExpense = () => {
+    if (!expenseAmount) {
+      enqueueSnackbar(
+        "Expense should not be empty, if it is expected then delete the expense or do not add the expense",
+        { variant: "error" }
+      );
+      return;
+    }
+
     const newExpense = {
       id: uuidV4(),
       title,
@@ -67,58 +67,51 @@ const AddExpenseModal = ({ isOpen, closeModal, addExpense }) => {
         },
       }}
     >
-      <h2 className="add-balance-heading">{`Add Expense`}</h2>
-      <div className="actions-container">
-        <input
-          type="text"
-          placeholder="Title"
-          value={title}
-          onChange={event => setTitle(event.target.value)}
-          className="add-expense-input"
-          required
-        />
+      <form onSubmit={handleExpense}>
+        <h2 className="add-balance-heading">{`Add Expense`}</h2>
+        <div className="actions-container">
+          <input
+            type="text"
+            placeholder="Title"
+            value={title}
+            onChange={event => setTitle(event.target.value)}
+            className="add-expense-input"
+            required
+          />
 
-        <input
-          type="number"
-          placeholder="Price"
-          value={expenseAmount}
-          onChange={handleInputChange}
-          className="add-expense-input"
-          min="0"
-          required
-        />
-        <input
-          type="text"
-          placeholder="Select Category"
-          value={category}
-          onChange={event => setCategory(event.target.value)}
-          className="add-expense-input"
-          required
-        />
-        <input
-          type="date"
-          placeholder="dd/mm/yyyy"
-          value={date}
-          onChange={event => setDate(event.target.value)}
-          className="add-expense-input"
-          required
-        />
-        <button
-          onClick={handleExpense}
-          className="add-expense-button"
-          disabled={!isAddExpenseActionEnabled}
-          title={
-            !isAddExpenseActionEnabled
-              ? "Please enter all the details to enable this button"
-              : undefined
-          }
-        >
-          Add Expense
-        </button>
-        <button onClick={closeModal} className="cancel-button">
-          Cancel
-        </button>
-      </div>
+          <input
+            type="number"
+            placeholder="Price"
+            value={expenseAmount}
+            onChange={handleInputChange}
+            className="add-expense-input"
+            min="0"
+            required
+          />
+          <input
+            type="text"
+            placeholder="Select Category"
+            value={category}
+            onChange={event => setCategory(event.target.value)}
+            className="add-expense-input"
+            required
+          />
+          <input
+            type="date"
+            placeholder="dd/mm/yyyy"
+            value={date}
+            onChange={event => setDate(event.target.value)}
+            className="add-expense-input"
+            required
+          />
+          <button type="submit" className="add-expense-button">
+            Add Expense
+          </button>
+          <button onClick={closeModal} className="cancel-button">
+            Cancel
+          </button>
+        </div>
+      </form>
     </Modal>
   );
 };
