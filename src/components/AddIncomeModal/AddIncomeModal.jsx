@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
-import "./styles.css";
 import { useSnackbar } from "notistack";
+
+import "./styles.css";
 
 const AddIncomeModal = ({ isOpen, closeModal, walletBalance, addIncome }) => {
   const [incomeAmount, setIncomeAmount] = useState(walletBalance);

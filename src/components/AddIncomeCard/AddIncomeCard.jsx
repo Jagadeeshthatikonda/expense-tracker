@@ -1,6 +1,7 @@
 import React from "react";
-import "./styles.css";
 import { HiMiniPlusSmall } from "react-icons/hi2";
+
+import "./styles.css";
 
 const AddIncomeCard = ({ openAddIncomeModal, walletBalance }) => (
   <div className="income-card-container">

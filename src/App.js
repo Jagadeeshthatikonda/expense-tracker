@@ -18,6 +18,7 @@ const App = () => {
   const [mode, setMode] = useState("");
   const [updateExpenseId, setUpdateExpenseId] = useState("");
   const { enqueueSnackbar } = useSnackbar();
+
   const localStorageExpenses = JSON.parse(localStorage.getItem("expenses"));
   const localStorageWalletBalance = JSON.parse(localStorage.getItem("wallet"));
 

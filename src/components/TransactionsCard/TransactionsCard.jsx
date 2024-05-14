@@ -1,4 +1,3 @@
-// IncomeForm.js
 import React, { useState } from "react";
 import "./styles.css";
 import { GiExpense } from "react-icons/gi";
@@ -7,13 +6,13 @@ import { IoIosCloseCircleOutline } from "react-icons/io";
 import { BsPencil } from "react-icons/bs";
 import { TbArrowNarrowLeft } from "react-icons/tb";
 import { TbArrowNarrowRight } from "react-icons/tb";
-
+import { MAXIMUM_TRANSACTIONS_VISIBLE } from "../../constants";
 const TransactionsCard = ({
   expenses,
   deleteExpense,
   openUpdateExpenseModal,
 }) => {
-  const totalPages = Math.ceil(expenses.length / 3);
+  const totalPages = Math.ceil(expenses.length / MAXIMUM_TRANSACTIONS_VISIBLE);
   const [currentPage, setCurrentPage] = useState(1);
   const handleNext = () => {
     if (currentPage < totalPages) {
@@ -27,8 +26,11 @@ const TransactionsCard = ({
     }
   };
 
-  const startIndex = (currentPage - 1) * 3;
-  const endIndex = Math.min(startIndex + 3, expenses.length);
+  const startIndex = (currentPage - 1) * MAXIMUM_TRANSACTIONS_VISIBLE;
+  const endIndex = Math.min(
+    startIndex + MAXIMUM_TRANSACTIONS_VISIBLE,
+    expenses.length
+  );
 
   const renderEachTransaction = expense => (
     <div className="transaction-container " key={expense.id}>

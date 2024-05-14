@@ -10,25 +10,16 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const TopExpenseBarChart = ({ expenses }) => {
-  const modifiedData = expenses.reduce((acc, curr) => {
-    const { category, price } = curr;
-    acc[category] = (acc[category] || 0) + price;
-    return acc;
-  }, {});
+import { getExpenseGroupedDataFromArrayOfObjects } from "../../utils/";
 
-  const modifiedGroupingDataArray = Object.entries(modifiedData).map(
-    ([category, price]) => ({
-      name: category,
-      value: price,
-    })
-  );
+const TopExpenseBarChart = ({ expenses }) => {
+  const data = getExpenseGroupedDataFromArrayOfObjects(expenses);
 
   return (
     <ResponsiveContainer width="100%" height="100%">
       <ComposedChart
         layout="vertical"
-        data={modifiedGroupingDataArray}
+        data={data}
         margin={{
           top: 20,
           right: 20,

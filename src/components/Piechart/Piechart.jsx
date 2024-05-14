@@ -1,9 +1,17 @@
 import React from "react";
-import { PieChart, Pie, Cell, Legend, Tooltip,ResponsiveContainer } from "recharts";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 import "./styles.css";
+import { PIE_VALUE } from "../../constants";
 import { expenseItemColors } from "../../utils/colorUtils.js";
-
-const RADIAN = Math.PI / 180;
+import { getExpenseGroupedDataFromArrayOfObjects } from "../../utils/";
+const RADIAN = Math.PI / PIE_VALUE;
 
 const renderCustomizedLabel = ({
   cx,
@@ -38,24 +46,13 @@ const renderCustomizedLabel = ({
 };
 
 const ExpensesPieChart = ({ expenses }) => {
-  const modifiedData = expenses.reduce((acc, curr) => {
-    const { category, price } = curr;
-    acc[category] = (acc[category] || 0) + price;
-    return acc;
-  }, {});
-
-  const modifiedArray = Object.entries(modifiedData).map(
-    ([category, price]) => ({
-      name: category,
-      value: price,
-    })
-  );
+  const data = getExpenseGroupedDataFromArrayOfObjects(expenses);
   return (
     <div className="recharts-wrapper-container">
       <ResponsiveContainer className="recharts-responsive-container">
         <PieChart width={199} height={199}>
           <Pie
-            data={modifiedArray}
+            data={data}
             cx="50%"
             cy="50%"
             labelLine={false}
@@ -64,7 +61,7 @@ const ExpensesPieChart = ({ expenses }) => {
             fill="#8884d8"
             dataKey="value"
           >
-            {modifiedArray.map((entry, index) => (
+            {data.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}
                 fill={expenseItemColors[index % expenseItemColors.length]}
