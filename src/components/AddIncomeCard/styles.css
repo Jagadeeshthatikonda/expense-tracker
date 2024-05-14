@@ -25,6 +25,7 @@
   color: #ffffff;
 }
 .add-income-btn {
+  cursor: pointer;
   width: 167.65px;
   height: 38px;
   opacity: 0px;
