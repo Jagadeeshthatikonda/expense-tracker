@@ -32,7 +32,6 @@
   width: 217px;
   height: 51px;
   border-radius: 15px;
-  opacity: 0px;
   outline: none;
   border: none;
   padding: 8px;
@@ -46,7 +45,6 @@
   left: 630px;
   gap: 0px;
   border-radius: 15px;
-  opacity: 0px;
   background-color: #f4bb4a;
   color: #ffffff;
   font-size: 16px;
@@ -65,7 +63,7 @@
   height: 51px;
 
   border-radius: 15px;
-  opacity: 0px;
+
   outline: none;
   border: none;
   text-align: center;
