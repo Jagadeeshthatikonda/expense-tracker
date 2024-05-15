@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
-import { useSnackbar } from "notistack";
 
 import "./styles.css";
 
 const AddIncomeForm = ({ isOpen, closeModal, walletBalance, addIncome }) => {
   const [incomeAmount, setIncomeAmount] = useState(walletBalance);
-  const { enqueueSnackbar } = useSnackbar();
 
   const handleInputChange = event => {
     const incomeValue = parseInt(event.target.value);
@@ -16,23 +14,6 @@ const AddIncomeForm = ({ isOpen, closeModal, walletBalance, addIncome }) => {
 
   const handleAddBalance = e => {
     e.preventDefault();
-    if (!incomeAmount) {
-      enqueueSnackbar(
-        "Income should not be empty, if it is expected then no need to add",
-        { variant: "error" }
-      );
-      return;
-    }
-
-    if (incomeAmount < walletBalance) {
-      enqueueSnackbar(
-        "Existing income can not be decreased and it causes mismatch data to existing expenses",
-        {
-          variant: "error",
-        }
-      );
-      return;
-    }
 
     addIncome(parseInt(incomeAmount));
     closeModal();
@@ -75,7 +56,7 @@ const AddIncomeForm = ({ isOpen, closeModal, walletBalance, addIncome }) => {
             value={incomeAmount}
             onChange={handleInputChange}
             className="add-income-input"
-            min={`${walletBalance}`}
+            min="0"
             required
           />
           <button type="submit" className="add-income-button">
