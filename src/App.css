@@ -1,18 +1,12 @@
 .app-container {
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
+  overflow-y: auto;
   background-color: #3b3b3b;
   padding: 16px 32px 48px 16px;
 }
-
-@media screen and (max-width: 660px) {
-  .app-container {
-    overflow-y: auto;
-  }
-  .app-container::-webkit-scrollbar {
-    display: block;
-  }
+.app-container::-webkit-scrollbar {
+  display: block;
 }
 
 .income-expenses-details-container {
